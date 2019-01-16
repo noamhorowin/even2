@@ -19,6 +19,7 @@ public:
 
     std::vector<State<T> *> search(ISearchable<T> *searchable) {
         // this->addToOpenList(searchable.getInitialState());
+        this->evaluatedNodes++;
         std::stack<PriorityState<T> *> vertex;
         PriorityState<T> *s = searchable->getInitialState();
         vertex.push((s));
@@ -30,9 +31,9 @@ public:
         bool fiRun = true;
         while (!vertex.empty()) {
             PriorityState<T> *v = ((vertex.top()));
+            this->evaluatedNodes++;
             vertex.pop();
             if (v->getStateOfPriority()->operator==(*(gaolso->getStateOfPriority()))) {
-                std::cout << "next next" << std::endl;
                 std::cout << this->closed.size() << std::endl;
                 return this->getBackTrace(v);
             }
@@ -44,10 +45,8 @@ public:
                 for (int i = 0; i < successors.size(); i++) {
                     PriorityState<T> *al = successors[i];
                     State<T> *ssd = (al->getStateOfPriority());
-                    std::cout << "aziz1" << std::endl;
                     if (!this->hasVisited(ssd)) {
                         al->setCameFrom((v->getStateOfPriority()));
-                        std::cout << "aziz2" << std::endl;
                         //  PriorityState<T> tema= *successors[i];
                         vertex.push(al);
                         //  successors[i]
@@ -64,7 +63,7 @@ public:
         throw "something";
     }
 
-    double getPrioity(PriorityState<T> *fatherOrSon) {
+    double getPrioity(State<T> *fatherOrSon) {
         return 0;
     }
 
