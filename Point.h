@@ -14,12 +14,15 @@ public:
         this->x = X;
         this->y = Y;
     }
+   /* Point(Point a){
+        this
+    }*/
 
-    int getX() const {
+   double getX() const {
         return this->x;
     }
 
-    int getY() const {
+    double getY() const {
         return this->y;
     }
 
@@ -49,8 +52,10 @@ public:
         return this->getYdistance(p) + this->getXdistance(p);
     }
 
-    bool operator==(const Point &p)const{
-        return ((x == p.getX()) &&(y==p.getY()));
+    bool operator==(const Point &p)const {
+       bool  boli = (x == p.getX()) && (y == p.getY());
+
+            return (boli);
     }
     // int getDistancePitagorass
 };

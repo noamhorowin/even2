@@ -7,16 +7,20 @@
 
 #include "IHeuristic.h"
 #include "Point.h"
+#include "PriorityState.h"
 
 //template <class T>
 class HeuristicPointFunc : public IHeuristic<Point> {
+public:
+State<Point>* goal;
+    HeuristicPointFunc(State<Point>* goal) {
+        this->goal = goal;
 
-    State<Point> goal;
-HeuristicPointFunc(State<Point> goal) : goal(goal){
-}
-    virtual double distanceFromGoal(State<Point> s) {
-        double temp = goal.getState().getX() - s.getState().getX() +
-                (goal.getState().getY() - s.getState().getY());
+    };
+
+    virtual double distanceFromGoal(State<Point> *s) {
+        double temp = goal->getState()->getX() - s->getState()->getX() +
+                      (goal->getState()->getY() - s->getState()->getY());
         return temp;
     }
 };

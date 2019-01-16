@@ -13,7 +13,7 @@ template <class T>
 class ISearcher {
 public:
     // the search method
-    virtual std::vector<State<T>> search (ISearchable<T> searchable)=0;
+    virtual std::vector<State<T>*> search (ISearchable<T>* searchable)=0;
 // get how many nodes were evaluated by the algorithm
     virtual int getNumberOfNodesEvaluated()=0;
 

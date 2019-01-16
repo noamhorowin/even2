@@ -10,14 +10,15 @@
 template<class T>
 class AStar : public Searcher<T> {
 private:
-    double goalX;
-    double goalY;
+    double goalX;//member
+    double goalY;//member
 
 public:
 
-    IHeuristic<T> heuristic;// member
+    IHeuristic<T> *heuristic;// member
 
-    AStar(IHeuristic<T> h) : heuristic(h) {
+    AStar(IHeuristic<T> *h) {
+        this->heuristic = h;
     }
 
     void setGoalX(double x) {
@@ -33,9 +34,12 @@ public:
         setGoalY(y);
     }
 
-    virtual double getPrioity(State<T> fatherOrSon) {
-        return heuristic.distanceFromGoal(fatherOrSon) +  //TODO change it
-               this->getPrioity(fatherOrSon) + fatherOrSon.getCost();//TODO good
+    virtual double getPrioity(State<T> *fatherOrSon) {
+        if(fatherOrSon->getCameFrom() == NULL){
+            return( (this->heuristic->distanceFromGoal(fatherOrSon)) + fatherOrSon->getCost());
+        }
+        return (heuristic->distanceFromGoal(fatherOrSon) +  //TODO change it
+               this->getPrioity(fatherOrSon->getCameFrom()) + fatherOrSon->getCost());//TODO good
 
 
     }

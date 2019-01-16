@@ -65,8 +65,11 @@ public:
         return nullptr;
     }*/
 
-    double getPrioity(State<T> fatherOrSon) {
-        double priority = this->openList.findSpeseficState(std::pair<State<T>,double >(fatherOrSon,0)).second; // priority isnt taken in sreach.
+    double getPrioity(State<T>* fatherOrSon) {
+        if(fatherOrSon->getCameFrom() == NULL){
+            return fatherOrSon->getCost();
+        }
+        double priority = this->getPrioity(fatherOrSon->getCameFrom()) + fatherOrSon->getCost(); // priority isnt taken in sreach.
         return priority;
     }
 };

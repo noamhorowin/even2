@@ -5,39 +5,67 @@
 #ifndef EVEN2_DEPTHFIRSTSEARCH_H
 #define EVEN2_DEPTHFIRSTSEARCH_H
 
+#include <set>
 #include "Searcher.h"
 #include "stack"
+
 
 template<class T>
 class DepthFirstSearch : public Searcher<T> {
 
-    double getPrioity(State<T> father) {
-        return 0;
-    }
+public:
+    DepthFirstSearch() {}
 
-    virtual std::vector<State<T>> search(ISearchable<T> searchable) {
+
+    std::vector<State<T> *> search(ISearchable<T> *searchable) {
         // this->addToOpenList(searchable.getInitialState());
-        std::stack<State<T>> vertex;
-        vertex.push(searchable.getInitialState());
-        std::map<State<T>, int> visited;
-        State<T> s;
-        if (s == searchable.getGoalState()) {
+        std::stack<PriorityState<T> *> vertex;
+        PriorityState<T> *s = searchable->getInitialState();
+        vertex.push((s));
+        //std::set<PriorityState<T>* , int> visited;
+        PriorityState<T> *gaolso = searchable->getGoalState();
+        if (s->getStateOfPriority()->operator==(*(gaolso->getStateOfPriority()))) {
             return this->getBackTrace(s);
         }//TODO stop con.
+        bool fiRun = true;
         while (!vertex.empty()) {
-            State<T> v = vertex.top();
+            PriorityState<T> *v = ((vertex.top()));
             vertex.pop();
+            if (v->getStateOfPriority()->operator==(*(gaolso->getStateOfPriority()))) {
+                std::cout << "next next" << std::endl;
+                std::cout << this->closed.size() << std::endl;
+                return this->getBackTrace(v);
+            }
             //Todo check for goal.
-            if (visited.count(v) == 0) {
-                visited[v] = 1;
-                std::vector<State<T>> successors = searchable.getAllPossibleStates(v);
+            if (!(this->hasVisited((v->getStateOfPriority())))) {
+                fiRun = false;
+                this->myInsert(v->getStateOfPriority());
+                std::vector<PriorityState<T> *> successors = searchable->getAllPossibleStates(v);
                 for (int i = 0; i < successors.size(); i++) {
-                    vertex.push(successors[i]);
+                    PriorityState<T> *al = successors[i];
+                    State<T> *ssd = (al->getStateOfPriority());
+                    std::cout << "aziz1" << std::endl;
+                    if (!this->hasVisited(ssd)) {
+                        al->setCameFrom((v->getStateOfPriority()));
+                        std::cout << "aziz2" << std::endl;
+                        //  PriorityState<T> tema= *successors[i];
+                        vertex.push(al);
+                        //  successors[i]
+                    }
+                    //    std::cout << "run for i times:" << texos << std::endl;
+
+                    // std::cout << "if i was true" << this->hasVisited((v->getStateOfPriority())) << std::endl;
+
+
                 }
             }
         }
         std::cout << "failed in dfs" << std::endl;
-        return nullptr;
+        throw "something";
+    }
+
+    double getPrioity(PriorityState<T> *fatherOrSon) {
+        return 0;
     }
 
 

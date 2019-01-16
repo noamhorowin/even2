@@ -5,19 +5,20 @@
 #ifndef EVEN2_IHEURISTIC_H
 #define EVEN2_IHEURISTIC_H
 
-#include "State.h"
+#include "PriorityState.h"
 
 template <class T>
 class IHeuristic {
+protected:
+  //  PriorityState<T> *goal;
+
 public:
     IHeuristic(){
-
+        //this->goal = s;
     }
 
-protected:
-    State<T> goal;
-
-    virtual double distanceFromGoal(State<T> s) = 0;
+public:
+    virtual double distanceFromGoal(State<T> * s) = 0;
 
 };
 

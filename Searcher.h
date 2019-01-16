@@ -6,112 +6,151 @@
 #define EVEN2_SEARCHER_H
 
 
+#include <algorithm>
+#include <set>
 #include "ISearcher.h"
 #include "MyPriorityQueue.h"
 #include "HeuristicPointFunc.h"
+#include "MyComparator.h"
 
 template<class T>
 class Searcher : public ISearcher<T> {
 
 protected:
-    MyPriorityQueue<State<T>> openList;
-
+    MyPriorityQueue<T> *openList;
+    std::set<State<T> *> closed;
     int evaluatedNodes;
-    HeuristicPointFunc<T> heFunc
+    IHeuristic<State<T>*> *heFunc;
 
 public:
+    void myInsert(State<T> *state) {
+        closed.insert(state);
+    }
+
+    bool hasVisited(State<T> *state) {
+        return closed.end() != std::find_if(closed.begin(), closed.end(), MyStateComperator<T>(state));
+    }
+
     Searcher() {
+        openList = new(MyPriorityQueue<T> );
+        // this->closed = new ( std::set<State<T> *> );
         this->evaluatedNodes = 0;
     }
 
-    Searcher(HeuristicPointFunc<T> heFunc) {
-        this->heFunc = heFunc;
+
+    Searcher(IHeuristic<T> *heFunci) {
+        this->heFunc = heFunci;
         this->evaluatedNodes = 0;
 
     }
 
     int OpenListSize() {
-        return this->openList.size();
+        return this->openList->size();
     }
 
     virtual int getNumberOfNodesEvaluated() {
         return this->evaluatedNodes;
     }
 
-    virtual double getPrioity(State<T> fatherOrSon) = 0;
+    virtual double getPrioity(State<T> *fatherOrSon) = 0;
 
-    virtual std::vector<State<T>> search(ISearchable<T> searchable) {
-        this->addToOpenList(searchable.getInitialState());
-        std::map<std::pair<State<T>, double>, int> closed;
+    virtual std::vector<State<T> *> search(ISearchable<T> *searchable) {
+        this->addToOpenList(searchable->getInitialState());
         while (this->OpenListSize() > 0) {
-            std::pair<State<T>, double> s = this->popOpenList();
-            closed[s] = 1;
-            if (s.first == searchable.getGoalState()) {
-                return this->getBackTrace(s.first); //TODO add back TRACE method
+            PriorityState<T> *s = this->popOpenList();// TODO pair
+            closed.insert(s->getStateOfPriority());
+            if (*s->getStateOfPriority() == *searchable->getGoalState()->getStateOfPriority()) {
+                return this->getBackTrace(s);
             }
-            std::vector<State<T>> successors = searchable.getAllPossibleStates();
-            typename std::vector<State<T>>::iterator it = successors.begin();
+            std::vector<PriorityState<T> *> successors = searchable->getAllPossibleStates(
+                    s);//->getAllPossibleStates(); //TODO pair
+            typename std::vector<PriorityState<T> *>::iterator it = successors.begin(); // TODO pair
             while (it != successors.end()) {
-                if ((closed.count(*it) == 0) && (!this->openList.contains(*it))) { // list dosent contains the son.
-                    // s.setCameFrom(n); //TODO already done by getSuccessors
-
-                    if (this->getPrioity(s) == -1) { // for algos that dosent care about cost
-                        this->openList.push(*it, this->getPrioity(s));
-                    } else if (it.getCost() != -1) { // for algos that take care about the cost
-                        double prioity = (*it).getCost() + this->getPrioity(s);
-                        this->openList.push(std::pair<State<T>, double>(*it, prioity));
+                if ((!hasVisited((*it)->getStateOfPriority()))
+                    &&
+                    !(this->openList->contains((*it)->getStateOfPriority()))) { // list dosent contains the son.
+                    (*it)->setCameFrom(s->getStateOfPriority());
+                    if ((*it)->getStateOfPriority()->getCost() != -1) { // can step on it
+                        double prioity =
+                                (*it)->getStateOfPriority()->getCost() + this->getPrioity(s->getStateOfPriority());
+                        (*it)->setPrioity(prioity);
+                        (*it)->getStateOfPriority()->setCameFrom(s->getStateOfPriority());
+                        this->openList->push((*it));
                     }
                     //else cant reach to it.
 
                 } else { //check if update of the list is require
-                    double sPrioity = this->getPrioity(s);
-                    double sonPrioity = this->openList.findSpeseficState(*it).second;
+                    double sPrioity = s->getPriotiy();
+                    if (this->openList->contains((*it)->getStateOfPriority())) {
+                        double sonPrioity = this->openList->findSpeseficState((*it))->getPriotiy();
+
                     if (sPrioity >= 0) {
-                        if (sPrioity + (*it).getCost() < sonPrioity) { // need to update.
-                            if (this->openList.contains(*it)) { // check if in open
-                                this->openList->popSpeseficState(*it);
+                        if (sPrioity + (*it)->getStateOfPriority()->getCost() < sonPrioity) { // need to update.
+                            if (this->openList->contains((*it)->getStateOfPriority())) { // check if in open
+                                this->openList->popSpeseficState((*it));
                             } else {// in close
-                                closed.erase(*it);
+                                closed;// todo add delte method.
                             }
                             double newPrioity =
-                                    sPrioity + (*it).getCost(); // s.getCameFromCost isnt change since it cretion.
+                                    sPrioity +
+                                    (*it)->getStateOfPriority()->getCost(); // s.getCameFromCost isnt change since it cretion.
                             //(*it).setCameFrom(s); allready done.
-                            this->openList.push(std::pair<State<T>, double>(*it, newPrioity));
-                            // TODO update close
+                            (*it)->setPrioity(newPrioity);
+                            this->openList->push((*it));// TODO
                         } //else dont change a thing
                     }
-                }
+                }}
+                ++it;
 
             }
-
         }
-        return nullptr;
-
+        std::cout << "chine" << std::endl;
+        throw "something";
 
     }
 
-    std::vector<State<T>> getBackTrace(State<T> s) {
-        std::vector<State<T>> road;
-        road[0] = s;
-        int i = 1;
-        State<T> temp = s;
-        while (temp != NULL) {
-            road[i] = temp.getCameFrom();
-            temp = temp.getCameFrom();
-            ++i;
+
+    std::vector<State<T> *>
+
+    getBackTrace(PriorityState<T>
+                 *s) {
+
+        State<T> *temp = s->getStateOfPriority();
+        std::vector<State<T> *> road;
+        if (s == NULL) {
+            std::cout << "hi" <<
+                      std::endl;
+        } else {
+            if (s->getStateOfPriority()->getCameFrom() != NULL) {
+//road[0] = s;
+
+                int i = 0;
+                while (temp != NULL) {
+                    road.
+                            push_back(temp);
+                    temp = temp->getCameFrom();
+                    std::cout << i <<
+                              std::endl;
+                    ++
+                            i;
+                }
+            }
         }
-        return road;
+        std::cout << "finish" <<
+                  std::endl;
+        return
+                road;
     }
 
-    State<T> popOpenList() {
+    PriorityState<T> *popOpenList() {
         evaluatedNodes++;
-        State<T> s = this->openList.top();
-        this->openList.pop();
+        PriorityState<T> *s = this->openList->top();
+        this->openList->pop();
         return s;
     }
 
-    void addToOpenList(std::pair<State<T>, double> s) {
-        this->openList.push(s);
+    void addToOpenList(PriorityState<T> *s) {
+        this->openList->push(s);
     }
 
 };
