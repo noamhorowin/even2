@@ -8,19 +8,21 @@
 #include "IHeuristic.h"
 #include "Point.h"
 #include "PriorityState.h"
+#include <cmath>
 
 //template <class T>
 class HeuristicPointFunc : public IHeuristic<Point> {
 public:
-State<Point>* goal;
-    HeuristicPointFunc(State<Point>* goal) {
+    State<Point> *goal;
+
+    HeuristicPointFunc(State<Point> *goal) {
         this->goal = goal;
 
     };
 
-    virtual double distanceFromGoal(State<Point> *s) {
-        double temp = goal->getState()->getX() - s->getState()->getX() +
-                      (goal->getState()->getY() - s->getState()->getY());
+    virtual double distanceFromGoal(State<Point> *s) { //TODO can cause problems, fix it before am test
+        double temp = fabs(goal->getState()->getX() - s->getState()->getX()) +
+                      fabs(((goal->getState()->getY() - s->getState()->getY())));
         return temp;
     }
 };

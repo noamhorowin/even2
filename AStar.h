@@ -38,9 +38,8 @@ public:
         if(fatherOrSon->getCameFrom() == NULL){
             return( (this->heuristic->distanceFromGoal(fatherOrSon)) + fatherOrSon->getCost());
         }
-        return (heuristic->distanceFromGoal(fatherOrSon) +  //TODO change it
-               this->getPrioity(fatherOrSon->getCameFrom()) + fatherOrSon->getCost());//TODO good
-
+        return (heuristic->distanceFromGoal(fatherOrSon) +
+               this->getPrioity(fatherOrSon->getCameFrom()) + fatherOrSon->getCost());
 
     }
 

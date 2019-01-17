@@ -33,11 +33,11 @@ public:
     }
 
     PriorityState<Point> *getInitialState() {
-        return (new PriorityState<Point>((new Point(0,0)),2,2));
+        return (new PriorityState<Point>((new Point(0,0)),2,10));
     };
 
     PriorityState<Point> * getGoalState() {
-        return (new PriorityState<Point>((new Point(1,4)),5,-1));
+        return (new PriorityState<Point>((new Point(10,10)),1,10)); // TODO point start from 0 0 to max - 1, max - 1
     };
 
     std::vector<PriorityState<Point>*>
@@ -51,7 +51,7 @@ public:
             listOfStates.push_back((new PriorityState<Point>(*matrixPoints[s->getStateOfPriority()->getState()->getX()][
                                            s->getStateOfPriority()->getState()->getY() - 1])));
         }
-        if (s->getStateOfPriority()->getState()->getX() + 1 <= row) {
+        if (s->getStateOfPriority()->getState()->getX() + 1 < row) {
             listOfStates.push_back((new PriorityState<Point>(*matrixPoints[s->getStateOfPriority()->getState()->getX() +
                                                 1][s->getStateOfPriority()->getState()->getY()])));
         }
@@ -102,6 +102,10 @@ public:
         }
         return ve;
     }
+
+
+    /*void freeMatrix(){
+    }*/
 };
 
 

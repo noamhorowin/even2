@@ -20,7 +20,7 @@ protected:
     MyPriorityQueue<T> *openList;
     std::set<State<T> *> closed;
     int evaluatedNodes;
-    IHeuristic<State<T>*> *heFunc;
+    IHeuristic<State<T> *> *heFunc;
 
 public:
     void myInsert(State<T> *state) {
@@ -84,36 +84,35 @@ public:
                     if (this->openList->contains((*it)->getStateOfPriority())) {
                         double sonPrioity = this->openList->findSpeseficState((*it))->getPriotiy();
 
-                    if (sPrioity >= 0) {
-                        if (sPrioity + (*it)->getStateOfPriority()->getCost() < sonPrioity) { // need to update.
-                            if (this->openList->contains((*it)->getStateOfPriority())) { // check if in open
-                                this->openList->popSpeseficState((*it));
-                            } else {// in close
-                                closed;// todo add delte method.
-                            }
-                            double newPrioity =
-                                    sPrioity +
-                                    (*it)->getStateOfPriority()->getCost(); // s.getCameFromCost isnt change since it cretion.
-                            //(*it).setCameFrom(s); allready done.
-                            (*it)->setPrioity(newPrioity);
-                            this->openList->push((*it));// TODO
-                        } //else dont change a thing
+                        if (sPrioity >= 0) {
+                            if (sPrioity + (*it)->getStateOfPriority()->getCost() < sonPrioity) { // need to update.
+                                if (this->openList->contains((*it)->getStateOfPriority())) { // check if in open
+                                    this->openList->popSpeseficState((*it));
+                                } else {// in close
+                                    closed;// todo add delte method.
+                                }
+                                double newPrioity =
+                                        sPrioity +
+                                        (*it)->getStateOfPriority()->getCost(); // s.getCameFromCost isnt change since it cretion.
+                                //(*it).setCameFrom(s); allready done.
+                                (*it)->setPrioity(newPrioity);
+                                this->openList->push((*it));// TODO
+                            } //else dont change a thing
+                        }
                     }
-                }}
+                }
                 ++it;
 
             }
         }
-        std::cout << "chine" << std::endl;
-        throw "something";
+        std::cout << "best and stars like to " << std::endl;
+        throw "rocks";
 
     }
 
 
-    std::vector<State<T> *>
-
-    getBackTrace(PriorityState<T>
-                 *s) {
+    std::vector<State<T> *> getBackTrace(PriorityState<T>
+                                         *s) {
 
         State<T> *temp = s->getStateOfPriority();
         std::vector<State<T> *> road;
@@ -123,23 +122,17 @@ public:
         } else {
             if (s->getStateOfPriority()->getCameFrom() != NULL) {
 //road[0] = s;
-
                 int i = 0;
                 while (temp != NULL) {
-                    road.
-                            push_back(temp);
+                    road.push_back(temp);
                     temp = temp->getCameFrom();
-                    std::cout << i <<
-                              std::endl;
-                    ++
-                            i;
+                    std::cout << i << std::endl;
+                    ++i;
                 }
             }
         }
-        std::cout << "finish" <<
-                  std::endl;
-        return
-                road;
+        std::cout << "finish" << std::endl;
+        return road;
     }
 
     PriorityState<T> *popOpenList() {

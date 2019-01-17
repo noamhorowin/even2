@@ -26,7 +26,13 @@ public:
             }
             std::vector<PriorityState<T> *> successors = searchable->getAllPossibleStates(s);
             for (int i = 0; i < successors.size(); i++) {
-                if (!this->hasVisited(successors[i]->getStateOfPriority())) { // need to add to the q.
+                if (*s->getStateOfPriority() == *searchable->getGoalState()->getStateOfPriority()) {
+                    return this->getBackTrace(s);
+                }
+                PriorityState<T> * tem = successors[i];
+                if (!(this->hasVisited(tem->getStateOfPriority()))) { //
+                    // need to add to the q.
+                    this->closed.insert(s->getStateOfPriority());
                     PriorityState<Point> *tempos = successors[i];
                     tempos->setCameFrom(s->getStateOfPriority());
                     tempos->setPrioity(s->getPriotiy() + 1);
@@ -34,7 +40,7 @@ public:
                 }
             }
         }
-        std::cout << "you r under arrest " << std::endl;
+        std::cout << "bfs you r under arrest  " << std::endl;
         throw "the gun";
     }
 
