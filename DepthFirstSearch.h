@@ -27,17 +27,20 @@ public:
         PriorityState<T> *gaolso = searchable->getGoalState();
         if (s->getStateOfPriority()->operator==(*(gaolso->getStateOfPriority()))) {
             return this->getBackTrace(s);
-        }//TODO stop con.
+        }
         bool fiRun = true;
         while (!vertex.empty()) {
             PriorityState<T> *v = ((vertex.top()));
             this->evaluatedNodes++;
             vertex.pop();
             if (v->getStateOfPriority()->operator==(*(gaolso->getStateOfPriority()))) {
-                std::cout << this->closed.size() << std::endl;
+                while (!vertex.empty()) {
+                    vertex.pop();
+                }
+                this->closed.clear();
                 return this->getBackTrace(v);
             }
-            //Todo check for goal.
+
             if (!(this->hasVisited((v->getStateOfPriority())))) {
                 fiRun = false;
                 this->myInsert(v->getStateOfPriority());
@@ -51,22 +54,18 @@ public:
                         vertex.push(al);
                         //  successors[i]
                     }
-                    //    std::cout << "run for i times:" << texos << std::endl;
 
-                    // std::cout << "if i was true" << this->hasVisited((v->getStateOfPriority())) << std::endl;
 
 
                 }
             }
         }
-        std::cout << "failed in dfs" << std::endl;
-        throw "something";
+        throw "no way!";
     }
 
     double getPrioity(State<T> *fatherOrSon) {
         return 0;
     }
-
 
 };
 

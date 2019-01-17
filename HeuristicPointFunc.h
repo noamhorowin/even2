@@ -13,17 +13,20 @@
 //template <class T>
 class HeuristicPointFunc : public IHeuristic<Point> {
 public:
-    State<Point> *goal;
 
-    HeuristicPointFunc(State<Point> *goal) {
-        this->goal = goal;
+    HeuristicPointFunc(State<Point> *goali) {
+        this->goal = goali;
 
     };
 
-    virtual double distanceFromGoal(State<Point> *s) { //TODO can cause problems, fix it before am test
+    virtual double distanceFromGoal(State<Point> *s) {
         double temp = fabs(goal->getState()->getX() - s->getState()->getX()) +
                       fabs(((goal->getState()->getY() - s->getState()->getY())));
         return temp;
+    }
+
+    void setGoal(State<Point> * goli){
+        this->goal = goli;
     }
 };
 

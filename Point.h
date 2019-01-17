@@ -57,7 +57,6 @@ public:
 
             return (boli);
     }
-    // int getDistancePitagorass
 };
 
 #endif //EVEN2_POINT_H

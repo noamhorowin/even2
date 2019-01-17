@@ -15,11 +15,6 @@ protected:
     double cost;
     State<T>* cameFrom = NULL;
 public:
-/*    State(T* state){
-        this->state = state;
-        std::cout<<"No cost"<<std::endl;// TODO remove after debug.
-
-    }*/
     State(T* state, double cost){
         this->state = state;
         this->cost = cost;
@@ -32,10 +27,7 @@ public:
     void setCameFrom(State<T>* cameFrom){
         this->cameFrom=cameFrom;
     }
-    /**
-     *
-     * @return the cost of sda
-     */
+
     double getCost(){
         return this->cost;
     }

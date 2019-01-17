@@ -22,12 +22,7 @@ public:
         this->prioity = priotiy;
     }
 
-    //PriorityState(const State<T> te, double we ){
-//        state = &te;
-//te.setCost(23);
-//sda.setCost(23);
-      //  this->prioity=we;
-   // }
+
 
     State<T>* getStateOfPriority() {
         return this->state;

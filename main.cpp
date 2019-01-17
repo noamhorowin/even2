@@ -1,29 +1,41 @@
 #include <iostream>
 #include "queue"
-#include "vector"
-#include "ReverseString.h"
+#include "PriorityState.h"
 #include "Point.h"
+#include "MyPriorityQueue.h"
+#include "MatrixSearchable.h"
+#include "DepthFirstSearch.h"
+#include "BestFirstSearch.h"
+#include "AStar.h"
+#include "ISearchable.h"
+#include "HeuristicPointFunc.h"
+#include "ISearchable.h"
+#include "BestFirstSearch.h"
+#include "BreadthFirstSearch.h"
+#include "FileCacheManager.h"
+#include "DataAnalysis.h"
+#include "unordered_map"
+#include "MySerialServer.h"
+#include "MyTestClientHandler.h"
+#include "MyParallelServer.h"
+#include "ReverseString.h"
+#include "MatrixSolver.h"
+#include "MyClientHandler.h"
 
-//#include
-int main() {
-    std::priority_queue<int, std::vector<int>, std::greater<int>> mypq;
+using namespace std;
 
-    mypq.push(30);
-    mypq.push(100);
-    mypq.push(25);
-    mypq.push(40);
-    Point w=Point(20,23);
-    Point das= Point(590,123);
-    std::cout<<"x dis : " << w.getXdistance(das)<<" y dis: "<<w.getYdistance(das)<<" total dis: " <<das.getDistance(w)<<std::endl;
-    ReverseString r = ReverseString();
-    std::string s = r.activeReverser(" dam futs\n",true);
-    std::cout << s << std::endl;
-  //  mypq.emplace(30,12324);
-    std::cout << "Popping out elements...";
-    while (!mypq.empty()) {
-        std::cout << ' ' << mypq.top();
-        mypq.pop();
-    }
-    std::cout << '\n';
-    return 0;
+/*
+ *
+ *
+ */
+int main(int argc, char **argv) {
+    vector<string> lines;
+    AStar<Point> *astar = new AStar<Point>(new HeuristicPointFunc(new State<Point>((new Point(0, 0)), 0)));
+    MatrixSolver *ms1 = new MatrixSolver(astar, lines);
+
+     ClientHandler* clientHandler = new MyClientHandler(ms1, new FileCacheManager("myFile.txt"));
+     MyParallelServer s;
+     s.open(stoi(argv[1]), clientHandler);
+     pthread_exit(nullptr);
+    //return 0;
 }

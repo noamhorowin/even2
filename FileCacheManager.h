@@ -22,7 +22,7 @@ private:
     std::string fileName;
 public:
 // Constructor & Destructor
-    explicit FileCacheManager(std::string fileName) {
+     FileCacheManager(std::string fileName) {
         this->fileName = fileName;
     }
 
@@ -32,16 +32,16 @@ public:
 
 
     bool contains(std::string problem) {
-        formatData(problem);
+        //formatData(problem);
         bool exists = (myMap.count(problem) > 0);
-        undoFormatData(problem);
+        //undoFormatData(problem);
         return exists;
     }
 
     std::string getSolution(std::string problem) {
-        formatData(problem);
-        std::string sol = myMap.at(problem); //TODO change to at to []?
-        undoFormatData(problem);
+        //formatData(problem);
+        std::string sol = myMap.at(problem);
+        //undoFormatData(problem);
         return sol;
     }
 
@@ -51,62 +51,34 @@ public:
 
 // file to map
     void loadFromFile() {
-        std::ofstream myFile(fileName);
-        std::string key;
-        std::string val;
         std::ifstream inFile(fileName);
         std::string problem;
         std::string sol;
-        if (inFile.is_open()) { //TODo check if good? ! bad?
+        if (inFile.is_open()) {
             // Load file here
             while (getline(inFile, problem) && (!(inFile.eof()))) {
                 if (!problem.empty()) {
                     getline(inFile, sol);
-                    undoFormatData(problem);
-                    undoFormatData(sol);
+                    //undoFormatData(problem);
+                    //undoFormatData(sol);
                     myMap[problem] = sol;
                 }
             }
         }
-        inFile.close(); //TODO close ofstream too?
+        inFile.close();
     }
 
 // map to file
     void saveAllToFile() {
         std::ofstream myFile(fileName);
         for (std::pair<std::string, std::string> pair : myMap) {
-            myFile << formatData(pair.first) << std::endl;
-            myFile << formatData(pair.second) << std::endl;
+            myFile << pair.first<< std::endl;
+            myFile << pair.second << std::endl;
         }
         myFile.close();
     }
 
 
-// to format
-    std::string formatData(std::string line) {
-        char c = '\n';
-        char c1 = '$';
-        for (int i = 0; i < line.length(); i++) { // TODO check if line is changed too or not.
-            if (line[i] == c) {
-                line[i] = c1;
-                std::cout << line[i] << std::endl;
-            }
-            std::cout << line[i] << std::endl;
-
-        }
-        return line;
-    }
-
-    std::string undoFormatData(std::string line) {
-        char c1 = '\n';
-        char c = '$';
-        for (int i = 0; i < line.length(); i++) { //TODO same!
-            if (line[i] == c) {
-                line[i] = c1;
-            }
-        }
-        return line;
-    }
 
 };
 

@@ -20,7 +20,7 @@ protected:
     MyPriorityQueue<T> *openList;
     std::set<State<T> *> closed;
     int evaluatedNodes;
-    IHeuristic<State<T> *> *heFunc;
+    IHeuristic<T> *heFunc = nullptr;
 
 public:
     void myInsert(State<T> *state) {
@@ -55,16 +55,21 @@ public:
     virtual double getPrioity(State<T> *fatherOrSon) = 0;
 
     virtual std::vector<State<T> *> search(ISearchable<T> *searchable) {
+        if(heFunc != nullptr){
+            heFunc->setGoal((searchable->getGoalState()->getStateOfPriority()));
+        }
         this->addToOpenList(searchable->getInitialState());
         while (this->OpenListSize() > 0) {
-            PriorityState<T> *s = this->popOpenList();// TODO pair
+            PriorityState<T> *s = this->popOpenList();//
             closed.insert(s->getStateOfPriority());
             if (*s->getStateOfPriority() == *searchable->getGoalState()->getStateOfPriority()) {
+                this->openList->clearQ(); //
+                this->closed.clear();
                 return this->getBackTrace(s);
             }
             std::vector<PriorityState<T> *> successors = searchable->getAllPossibleStates(
-                    s);//->getAllPossibleStates(); //TODO pair
-            typename std::vector<PriorityState<T> *>::iterator it = successors.begin(); // TODO pair
+                    s);//->getAllPossibleStates();
+            typename std::vector<PriorityState<T> *>::iterator it = successors.begin();
             while (it != successors.end()) {
                 if ((!hasVisited((*it)->getStateOfPriority()))
                     &&
@@ -89,14 +94,14 @@ public:
                                 if (this->openList->contains((*it)->getStateOfPriority())) { // check if in open
                                     this->openList->popSpeseficState((*it));
                                 } else {// in close
-                                    closed;// todo add delte method.
+                                    closed;//
                                 }
                                 double newPrioity =
                                         sPrioity +
                                         (*it)->getStateOfPriority()->getCost(); // s.getCameFromCost isnt change since it cretion.
                                 //(*it).setCameFrom(s); allready done.
                                 (*it)->setPrioity(newPrioity);
-                                this->openList->push((*it));// TODO
+                                this->openList->push((*it));//
                             } //else dont change a thing
                         }
                     }
@@ -105,8 +110,7 @@ public:
 
             }
         }
-        std::cout << "best and stars like to " << std::endl;
-        throw "rocks";
+        throw "failed";
 
     }
 
@@ -117,21 +121,17 @@ public:
         State<T> *temp = s->getStateOfPriority();
         std::vector<State<T> *> road;
         if (s == NULL) {
-            std::cout << "hi" <<
-                      std::endl;
+
         } else {
             if (s->getStateOfPriority()->getCameFrom() != NULL) {
-//road[0] = s;
                 int i = 0;
                 while (temp != NULL) {
                     road.push_back(temp);
                     temp = temp->getCameFrom();
-                    std::cout << i << std::endl;
                     ++i;
                 }
             }
         }
-        std::cout << "finish" << std::endl;
         return road;
     }
 

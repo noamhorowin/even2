@@ -22,11 +22,15 @@ public:
             }
             this->closed.insert(s->getStateOfPriority());
             if (*s->getStateOfPriority() == *searchable->getGoalState()->getStateOfPriority()) {
+                this->closed.clear();
+                this->openList->clearQ();
                 return this->getBackTrace(s);
             }
             std::vector<PriorityState<T> *> successors = searchable->getAllPossibleStates(s);
             for (int i = 0; i < successors.size(); i++) {
                 if (*s->getStateOfPriority() == *searchable->getGoalState()->getStateOfPriority()) {
+                    this->closed.clear();
+                    this->openList->clearQ();
                     return this->getBackTrace(s);
                 }
                 PriorityState<T> * tem = successors[i];
@@ -35,13 +39,12 @@ public:
                     this->closed.insert(s->getStateOfPriority());
                     PriorityState<Point> *tempos = successors[i];
                     tempos->setCameFrom(s->getStateOfPriority());
-                    tempos->setPrioity(s->getPriotiy() + 1);
                     this->openList->push(tempos);
+                    tempos->setPrioity(s->getPriotiy() + 1);
                 }
             }
         }
-        std::cout << "bfs you r under arrest  " << std::endl;
-        throw "the gun";
+        throw "no way!";
     }
 
     double getPrioity(State<T> *fatherOrSon) {

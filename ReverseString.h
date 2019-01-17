@@ -5,15 +5,17 @@
 #ifndef EVEN2_REVERSESTRING_H
 #define EVEN2_REVERSESTRING_H
 
+#include "Solver.h"
 
 #include <string>
+#include <iostream>
 
-class ReverseString {
+class ReverseString : public Solver<std::string, std::string> {
 
     bool ok;
 public:
     ReverseString(){
-        ok = true; //TODO remove before sending.
+        ok = true;
     }
 
     std::string activeReverser(std::string s) {
@@ -31,6 +33,9 @@ public:
         }
         }
         return revS;
+    }
+    virtual std::string solve(std::string problem) {
+        return this->activeReverser(problem);
     }
 };
 

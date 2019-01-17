@@ -10,7 +10,7 @@
 template <class T>
 class IHeuristic {
 protected:
-  //  PriorityState<T> *goal;
+   State<T> *goal;
 
 public:
     IHeuristic(){
@@ -20,6 +20,7 @@ public:
 public:
     virtual double distanceFromGoal(State<T> * s) = 0;
 
+virtual void setGoal(State<T> * goli) = 0;
 };
 
 

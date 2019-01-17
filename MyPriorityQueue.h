@@ -49,9 +49,9 @@ int size =  q.size() ;
             q.push(temp[j]);
         }
         if (fail) {
-          //  std::cout << "wrong!!!!" << std::endl; // TODO del befor sub.
+          //  std::cout << "wrong!!!!" << std::endl;
         }
-        valSet.erase(pState->getStateOfPriority());//TODO change to del is good?
+        valSet.erase(pState->getStateOfPriority());
     }
 
     PriorityState<T> * findSpeseficState(PriorityState<T> *pState) {
@@ -69,9 +69,7 @@ int size =  q.size() ;
 
                 if ((pState->getStateOfPriority()->operator==(*(tempos->getStateOfPriority())))){
                    // ret = *tempos;
-                   // std::cout<<"realyNasffadIIIG "<< q.size()<<std::endl;
 
-                 //   std::cout<<"realyNIIIG"<<std::endl;
                     break;
                 }
                 temp.push_back(tempos);
@@ -82,13 +80,11 @@ int size =  q.size() ;
                 q.push(temp[j]);
             }
             if (fail) {
-          //      std::cout << "wrong!!!!" << std::endl; // TODO del befor sub.
             }
-          //  std::cout<<"w8 a sc "<< tempos->getPriotiy()<<std::endl;
             return tempos;
         }
-        std::cout << "fail in find me" << std::endl;
-        throw "nig";
+        throw "failed";
+
     }
 
 
@@ -107,8 +103,7 @@ int size =  q.size() ;
 
     void pop() {
         PriorityState<T>* s = (this->top());
-       // std::cout << s->getPriotiy() << " that was my prioity now im dead" << std::endl;
-        this->valSet.erase(s->getStateOfPriority()); //TODO change to del
+        this->valSet.erase(s->getStateOfPriority());
         q.pop();
     }
 
@@ -116,6 +111,13 @@ int size =  q.size() ;
         return q.top();
     }
 
+    void clearQ(){
+        this->valSet.clear();
+        while (!this->q.empty())
+        {
+            q.pop();
+        }
+    }
 };
 
 
